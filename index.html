@@ -5,11 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Downtime Dashboard - Excel Analytics</title>
 
-    <!-- External Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,7 +45,6 @@
             --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.12);
         }
 
-        /* Reset & Base */
         * {
             margin: 0;
             padding: 0;
@@ -95,13 +89,10 @@
             50% { transform: scale(1.1) rotate(5deg); }
         }
 
-        /* Layout */
         .app-container {
             position: relative;
             z-index: 1;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
         /* Header */
@@ -124,6 +115,11 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         .logo {
             display: flex;
             align-items: center;
@@ -139,12 +135,6 @@
             align-items: center;
             justify-content: center;
             font-size: 1.25rem;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
         }
 
         .logo h1 {
@@ -203,110 +193,64 @@
             opacity: 1;
         }
 
-        /* Main Content */
         main {
-            flex: 1;
-            padding: 2rem;
+            padding: 1.5rem 2rem;
             max-width: 1800px;
             margin: 0 auto;
             width: 100%;
         }
 
-        /* Upload Section */
+        /* Upload Section - Compact */
         .upload-section {
-            margin-bottom: 2rem;
-            animation: fadeInUp 0.6s ease;
-        }
-
-        @keyframes fadeInUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .upload-container {
             background: var(--bg-card);
-            border: 2px dashed var(--border-color);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 3rem;
-            text-align: center;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.5s ease;
         }
 
-        .upload-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--accent-gradient);
-            opacity: 0;
-            transition: var(--transition);
+        .upload-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .upload-container:hover {
-            border-color: var(--accent-primary);
-            transform: translateY(-2px);
-        }
-
-        .upload-container.drag-over {
-            border-color: var(--accent-primary);
-            background: rgba(99, 102, 241, 0.1);
-        }
-
-        .upload-container.drag-over::before {
-            opacity: 0.05;
-        }
-
-        .upload-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
-            background: var(--bg-tertiary);
-            border-radius: 50%;
+        .upload-title {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            animation: bounce 2s ease-in-out infinite;
+            gap: 0.75rem;
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .upload-container h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
+        .upload-title h2 {
+            font-size: 1.1rem;
             color: var(--text-primary);
         }
 
-        .upload-container p {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
+        .upload-title span {
+            font-size: 1.5rem;
         }
 
-        .upload-buttons {
+        .upload-actions {
             display: flex;
-            gap: 1rem;
-            justify-content: center;
+            gap: 0.75rem;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.65rem 1.25rem;
             border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             border: none;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            font-family: inherit;
         }
 
         .btn-primary {
@@ -332,91 +276,61 @@
             border-color: var(--accent-primary);
         }
 
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
         #fileInput {
             display: none;
         }
 
-        /* Paste Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal {
-            background: var(--bg-card);
-            border-radius: 20px;
+        /* Drop Zone */
+        .drop-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
             padding: 2rem;
-            width: 90%;
-            max-width: 800px;
-            max-height: 80vh;
-            overflow: auto;
-            animation: slideUp 0.4s ease;
-            border: 1px solid var(--border-color);
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-header h2 {
-            font-size: 1.5rem;
-            color: var(--text-primary);
-        }
-
-        .modal-close {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--bg-tertiary);
-            border: none;
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            cursor: pointer;
+            text-align: center;
+            margin-top: 1rem;
             transition: var(--transition);
+            display: none;
         }
 
-        .modal-close:hover {
-            background: var(--danger);
-            transform: rotate(90deg);
+        .drop-zone.active {
+            display: block;
+        }
+
+        .drop-zone.drag-over {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .drop-zone p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Paste Area */
+        .paste-section {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .paste-section.active {
+            display: block;
+            animation: fadeInUp 0.3s ease;
         }
 
         .paste-area {
             width: 100%;
-            min-height: 300px;
+            min-height: 150px;
             background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 1rem;
             color: var(--text-primary);
             font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             resize: vertical;
             margin-bottom: 1rem;
         }
@@ -426,50 +340,107 @@
             border-color: var(--accent-primary);
         }
 
-        /* Dashboard Grid */
-        .dashboard {
-            display: none;
-            animation: fadeInUp 0.6s ease;
+        .paste-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
         }
 
-        .dashboard.active {
+        /* Column Mapping Inline */
+        .mapping-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .mapping-section.active {
             display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .mapping-section h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .mapping-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .mapping-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .mapping-item label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .mapping-item select {
+            padding: 0.6rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: inherit;
+        }
+
+        .mapping-item select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .mapping-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
         }
 
         /* Filter Bar */
         .filter-bar {
             background: var(--bg-card);
             border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
             display: flex;
             flex-wrap: wrap;
-            gap: 1.5rem;
+            gap: 1rem;
             align-items: flex-end;
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
+            animation: fadeInUp 0.5s ease 0.1s both;
         }
 
         .filter-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .filter-group label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
             color: var(--text-secondary);
         }
 
         .filter-input {
-            padding: 0.75rem 1rem;
+            padding: 0.6rem 0.85rem;
             background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
+            border-radius: 8px;
             color: var(--text-primary);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: var(--transition);
+            font-family: inherit;
         }
 
         .filter-input:focus {
@@ -487,20 +458,21 @@
         /* Stats Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
         .stat-card {
             background: var(--bg-card);
             border-radius: 16px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+            animation: fadeInUp 0.5s ease 0.2s both;
         }
 
         .stat-card::before {
@@ -514,41 +486,36 @@
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
             box-shadow: var(--shadow-lg);
         }
 
         .stat-card h4 {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: var(--text-secondary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .stat-card .value {
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 0.25rem;
         }
 
-        .stat-card .change {
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
+        .stat-card .subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
         }
-
-        .stat-card .change.positive { color: var(--success); }
-        .stat-card .change.negative { color: var(--danger); }
 
         /* Charts Section */
         .charts-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
         @media (max-width: 1200px) {
@@ -560,10 +527,11 @@
         .chart-card {
             background: var(--bg-card);
             border-radius: 16px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
             transition: var(--transition);
+            animation: fadeInUp 0.5s ease 0.3s both;
         }
 
         .chart-card:hover {
@@ -574,32 +542,52 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .chart-header h3 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-primary);
         }
 
         .chart-container {
             position: relative;
-            height: 350px;
+            height: 320px;
+        }
+
+        .chart-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+        }
+
+        .chart-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .chart-empty p {
+            font-size: 0.9rem;
         }
 
         /* Top Downtime Section */
         .top-downtime-card {
             background: var(--bg-card);
             border-radius: 16px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
+            animation: fadeInUp 0.5s ease 0.3s both;
         }
 
         .top-downtime-card h3 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-primary);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -608,16 +596,16 @@
         .downtime-list {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .downtime-item {
             background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.85rem;
             transition: var(--transition);
             cursor: pointer;
             border: 1px solid transparent;
@@ -625,19 +613,19 @@
 
         .downtime-item:hover {
             border-color: var(--accent-primary);
-            transform: translateX(5px);
+            transform: translateX(4px);
         }
 
         .downtime-rank {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             background: var(--accent-gradient);
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             flex-shrink: 0;
         }
 
@@ -647,16 +635,16 @@
         }
 
         .downtime-info h4 {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: var(--text-primary);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.15rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .downtime-info p {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: var(--text-secondary);
         }
 
@@ -666,37 +654,60 @@
         }
 
         .downtime-duration .time {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--danger);
         }
 
         .downtime-duration .label {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             color: var(--text-muted);
         }
 
-        /* Bottom Search Panel */
+        .downtime-empty {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .downtime-empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            opacity: 0.5;
+        }
+
+        /* Timeline Chart */
+        .timeline-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.25rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.5s ease 0.4s both;
+        }
+
+        /* Search Panel */
         .search-panel {
             background: var(--bg-card);
             border-radius: 16px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
-            margin-top: 2rem;
+            animation: fadeInUp 0.5s ease 0.5s both;
         }
 
         .search-panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             flex-wrap: wrap;
             gap: 1rem;
         }
 
         .search-panel-header h3 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-primary);
         }
 
@@ -705,10 +716,10 @@
             align-items: center;
             background: var(--bg-tertiary);
             border-radius: 10px;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.85rem;
             border: 1px solid var(--border-color);
             transition: var(--transition);
-            min-width: 300px;
+            min-width: 280px;
         }
 
         .search-box:focus-within {
@@ -721,8 +732,9 @@
             background: none;
             border: none;
             color: var(--text-primary);
-            font-size: 0.9rem;
-            padding: 0.5rem;
+            font-size: 0.85rem;
+            padding: 0.4rem;
+            font-family: inherit;
         }
 
         .search-box input:focus {
@@ -735,13 +747,13 @@
 
         .search-icon {
             color: var(--text-muted);
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
         /* Event Table */
         .event-table-container {
             overflow-x: auto;
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid var(--border-color);
         }
 
@@ -752,14 +764,14 @@
 
         .event-table th,
         .event-table td {
-            padding: 1rem;
+            padding: 0.85rem;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
         }
 
         .event-table th {
             background: var(--bg-tertiary);
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: var(--text-secondary);
             text-transform: uppercase;
@@ -783,16 +795,16 @@
         }
 
         .event-table td {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-primary);
         }
 
         .event-code-badge {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
+            padding: 0.2rem 0.6rem;
             background: var(--accent-gradient);
-            border-radius: 20px;
-            font-size: 0.8rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
             font-weight: 500;
         }
 
@@ -803,15 +815,64 @@
         }
 
         .duration-bar-fill {
-            height: 6px;
+            height: 5px;
             background: var(--accent-gradient);
             border-radius: 3px;
             transition: width 0.5s ease;
+            min-width: 4px;
         }
 
-        /* Loading Spinner */
-        .loading {
-            display: none;
+        .table-empty {
+            text-align: center;
+            padding: 2.5rem;
+            color: var(--text-muted);
+        }
+
+        .table-empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            opacity: 0.5;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .pagination button {
+            padding: 0.4rem 0.85rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination span {
+            padding: 0.4rem 0.85rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Loading */
+        .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -819,19 +880,20 @@
             bottom: 0;
             background: rgba(0, 0, 0, 0.8);
             z-index: 2000;
+            display: none;
             align-items: center;
             justify-content: center;
             flex-direction: column;
             gap: 1rem;
         }
 
-        .loading.active {
+        .loading-overlay.active {
             display: flex;
         }
 
         .spinner {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border: 4px solid var(--bg-tertiary);
             border-top-color: var(--accent-primary);
             border-radius: 50%;
@@ -842,81 +904,124 @@
             to { transform: rotate(360deg); }
         }
 
-        .loading p {
-            color: var(--text-primary);
-            font-size: 1.1rem;
+        /* Expanded Info Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Tooltip */
-        .tooltip {
-            position: absolute;
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 1rem;
-            box-shadow: var(--shadow-lg);
-            z-index: 500;
-            max-width: 300px;
-            display: none;
-            animation: fadeIn 0.2s ease;
+            border-radius: 16px;
+            padding: 1.5rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: scaleIn 0.3s ease;
         }
 
-        .tooltip.active {
-            display: block;
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
-        .tooltip h4 {
-            font-size: 0.95rem;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .tooltip p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.25rem;
-        }
-
-        /* Column Mapping Modal */
-        .column-mapping {
-            margin-bottom: 1.5rem;
-        }
-
-        .column-mapping h3 {
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
-
-        .mapping-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .mapping-item {
+        .modal-header {
             display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
         }
 
-        .mapping-item label {
+        .modal-header h3 {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .expanded-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .expanded-stat {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 0.85rem;
+        }
+
+        .expanded-stat label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 0.2rem;
+            text-transform: uppercase;
+        }
+
+        .expanded-stat span {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .recent-events-title {
             font-size: 0.85rem;
             color: var(--text-secondary);
+            margin-bottom: 0.75rem;
         }
 
-        .mapping-item select {
-            padding: 0.75rem;
+        .recent-event {
             background: var(--bg-tertiary);
-            border: 1px solid var(--border-color);
+            padding: 0.65rem 0.85rem;
             border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
         }
 
-        .mapping-item select:focus {
-            outline: none;
-            border-color: var(--accent-primary);
+        .recent-event span:first-child {
+            color: var(--text-primary);
+            font-size: 0.85rem;
+        }
+
+        .recent-event span:last-child {
+            color: var(--danger);
+            font-weight: 600;
+            font-size: 0.85rem;
         }
 
         /* Responsive */
@@ -931,6 +1036,15 @@
                 padding: 1rem;
             }
 
+            .upload-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .upload-actions {
+                justify-content: center;
+            }
+
             .filter-bar {
                 flex-direction: column;
                 align-items: stretch;
@@ -942,7 +1056,7 @@
             }
 
             .stats-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .search-box {
@@ -950,145 +1064,56 @@
             }
         }
 
-        /* Bar click expansion effect */
-        .chart-expanded-info {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 2rem;
-            z-index: 600;
-            min-width: 400px;
-            max-width: 90vw;
-            box-shadow: var(--shadow-lg);
-            display: none;
-            animation: scaleIn 0.3s ease;
-        }
-
-        .chart-expanded-info.active {
-            display: block;
-        }
-
-        @keyframes scaleIn {
-            from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
-            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-
-        .expanded-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 550;
-            display: none;
-        }
-
-        .expanded-overlay.active {
-            display: block;
-        }
-
-        .expanded-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .expanded-header h3 {
-            font-size: 1.25rem;
-            color: var(--text-primary);
-        }
-
-        .expanded-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .expanded-stat {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 1rem;
-        }
-
-        .expanded-stat label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            display: block;
-            margin-bottom: 0.25rem;
-        }
-
-        .expanded-stat span {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        /* No data message */
-        .no-data {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-secondary);
-        }
-
-        .no-data-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
+        /* Data loaded state indicator */
+        .data-status {
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            margin-top: 1.5rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
         }
 
-        .pagination button {
-            padding: 0.5rem 1rem;
+        .data-status.no-data {
             background: var(--bg-tertiary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: var(--transition);
+            color: var(--text-muted);
         }
 
-        .pagination button:hover:not(:disabled) {
-            background: var(--accent-primary);
-            border-color: var(--accent-primary);
+        .data-status.has-data {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
         }
 
-        .pagination button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
         }
 
-        .pagination span {
-            padding: 0.5rem 1rem;
-            color: var(--text-secondary);
+        .no-data .status-dot {
+            background: var(--text-muted);
+        }
+
+        .has-data .status-dot {
+            background: var(--success);
+            animation: pulse-dot 2s ease infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
     </style>
 </head>
 <body>
-    <!-- Background Animation -->
     <div class="bg-animation"></div>
 
-    <!-- Loading Spinner -->
-    <div class="loading" id="loading">
+    <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
-        <p>Processing Excel data...</p>
+        <p style="color: var(--text-primary);">Processing data...</p>
     </div>
 
-    <!-- App Container -->
     <div class="app-container">
         <!-- Header -->
         <header>
@@ -1097,211 +1122,214 @@
                 <h1>Downtime Dashboard</h1>
             </div>
             <div class="header-controls">
-                <button class="theme-toggle" onclick="toggleTheme()">
+                <div class="data-status no-data" id="dataStatus">
+                    <span class="status-dot"></span>
+                    <span id="statusText">No data loaded</span>
+                </div>
+                <button class="theme-toggle" id="themeToggle">
                     <span class="sun">☀️</span>
                     <span class="moon">🌙</span>
                 </button>
             </div>
         </header>
 
-        <!-- Main Content -->
         <main>
             <!-- Upload Section -->
-            <section class="upload-section" id="uploadSection">
-                <div class="upload-container" id="dropZone">
-                    <div class="upload-icon">📁</div>
-                    <h3>Import Your Excel Data</h3>
-                    <p>Drag & drop your Excel file here, or choose an option below</p>
-                    <div class="upload-buttons">
-                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+            <section class="upload-section">
+                <div class="upload-header">
+                    <div class="upload-title">
+                        <span>📁</span>
+                        <h2>Import Excel Data</h2>
+                    </div>
+                    <div class="upload-actions">
+                        <button class="btn btn-primary" id="uploadBtn">
                             📤 Upload File
                         </button>
-                        <button class="btn btn-secondary" onclick="openPasteModal()">
+                        <button class="btn btn-secondary" id="pasteBtn">
                             📋 Paste Data
                         </button>
-                        <button class="btn btn-secondary" onclick="loadSampleData()">
+                        <button class="btn btn-secondary" id="sampleBtn">
                             📊 Load Sample
                         </button>
+                        <button class="btn btn-secondary btn-sm" id="clearBtn" style="display: none;">
+                            🗑️ Clear Data
+                        </button>
                     </div>
-                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" onchange="handleFileUpload(event)">
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+                </div>
+
+                <!-- Drop Zone (toggleable) -->
+                <div class="drop-zone" id="dropZone">
+                    <p>Drag and drop your Excel file here</p>
+                    <button class="btn btn-secondary btn-sm" id="cancelDropBtn">Cancel</button>
+                </div>
+
+                <!-- Paste Section (toggleable) -->
+                <div class="paste-section" id="pasteSection">
+                    <textarea class="paste-area" id="pasteArea" placeholder="Paste your Excel data here (tab or comma separated with headers in first row)..."></textarea>
+                    <div class="paste-actions">
+                        <button class="btn btn-secondary btn-sm" id="cancelPasteBtn">Cancel</button>
+                        <button class="btn btn-primary btn-sm" id="processPasteBtn">Process Data</button>
+                    </div>
+                </div>
+
+                <!-- Column Mapping (toggleable) -->
+                <div class="mapping-section" id="mappingSection">
+                    <h3>Map Your Columns</h3>
+                    <div class="mapping-grid" id="mappingGrid"></div>
+                    <div class="mapping-actions">
+                        <button class="btn btn-secondary btn-sm" id="cancelMappingBtn">Cancel</button>
+                        <button class="btn btn-primary btn-sm" id="applyMappingBtn">Create Dashboard</button>
+                    </div>
                 </div>
             </section>
 
-            <!-- Dashboard Section -->
-            <section class="dashboard" id="dashboard">
-                <!-- Filter Bar -->
-                <div class="filter-bar">
-                    <div class="filter-group">
-                        <label>Start Date/Time</label>
-                        <input type="datetime-local" class="filter-input" id="startDateFilter">
-                    </div>
-                    <div class="filter-group">
-                        <label>End Date/Time</label>
-                        <input type="datetime-local" class="filter-input" id="endDateFilter">
-                    </div>
-                    <div class="filter-group">
-                        <label>Event Code</label>
-                        <select class="filter-input" id="eventCodeFilter">
-                            <option value="">All Events</option>
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <label>Start Date/Time</label>
+                    <input type="datetime-local" class="filter-input" id="startDateFilter">
+                </div>
+                <div class="filter-group">
+                    <label>End Date/Time</label>
+                    <input type="datetime-local" class="filter-input" id="endDateFilter">
+                </div>
+                <div class="filter-group">
+                    <label>Event Code</label>
+                    <select class="filter-input" id="eventCodeFilter">
+                        <option value="">All Events</option>
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-primary btn-sm" id="applyFiltersBtn">Apply</button>
+                    <button class="btn btn-secondary btn-sm" id="resetFiltersBtn">Reset</button>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>Total Events</h4>
+                    <div class="value" id="totalEvents">0</div>
+                    <div class="subtitle">Downtime incidents</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Downtime</h4>
+                    <div class="value" id="totalDowntime">0h 0m</div>
+                    <div class="subtitle">Cumulative duration</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Avg Duration</h4>
+                    <div class="value" id="avgDuration">0m</div>
+                    <div class="subtitle">Per event average</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Unique Codes</h4>
+                    <div class="value" id="uniqueCodes">0</div>
+                    <div class="subtitle">Event categories</div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>📈 Downtime by Event Code</h3>
+                        <select class="filter-input" id="chartViewMode" style="width: auto;">
+                            <option value="duration">By Duration</option>
+                            <option value="count">By Count</option>
                         </select>
                     </div>
-                    <div class="filter-actions">
-                        <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
-                        <button class="btn btn-secondary" onclick="resetFilters()">Reset</button>
-                        <button class="btn btn-secondary" onclick="resetData()">📁 New Import</button>
+                    <div class="chart-container" id="mainChartContainer">
+                        <div class="chart-empty" id="mainChartEmpty">
+                            <div class="chart-empty-icon">📊</div>
+                            <p>Import data to see chart</p>
+                        </div>
+                        <canvas id="mainChart" style="display: none;"></canvas>
                     </div>
                 </div>
 
-                <!-- Stats Grid -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h4>Total Events</h4>
-                        <div class="value" id="totalEvents">0</div>
-                        <div class="change positive" id="eventsChange">
-                            <span>↑</span> All loaded events
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Total Downtime</h4>
-                        <div class="value" id="totalDowntime">0h 0m</div>
-                        <div class="change negative">
-                            <span>⏱</span> Cumulative duration
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Avg Event Duration</h4>
-                        <div class="value" id="avgDuration">0m</div>
-                        <div class="change">
-                            <span>📊</span> Per event average
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Unique Event Codes</h4>
-                        <div class="value" id="uniqueCodes">0</div>
-                        <div class="change">
-                            <span>🏷️</span> Distinct categories
+                <div class="top-downtime-card">
+                    <h3>🔥 Top 5 Downtime Events</h3>
+                    <div class="downtime-list" id="topDowntimeList">
+                        <div class="downtime-empty">
+                            <div class="downtime-empty-icon">📋</div>
+                            <p>No events to display</p>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Charts Grid -->
-                <div class="charts-grid">
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <h3>📈 Downtime by Event Code</h3>
-                            <select class="filter-input" id="chartViewMode" onchange="updateMainChart()">
-                                <option value="duration">By Duration</option>
-                                <option value="count">By Count</option>
-                            </select>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="mainChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="top-downtime-card">
-                        <h3>🔥 Top 5 Downtime Events</h3>
-                        <div class="downtime-list" id="topDowntimeList">
-                            <!-- Populated dynamically -->
-                        </div>
-                    </div>
+            <!-- Timeline Chart -->
+            <div class="timeline-card">
+                <div class="chart-header">
+                    <h3>📅 Downtime Timeline</h3>
                 </div>
+                <div class="chart-container" id="timelineChartContainer">
+                    <div class="chart-empty" id="timelineChartEmpty">
+                        <div class="chart-empty-icon">📈</div>
+                        <p>Import data to see timeline</p>
+                    </div>
+                    <canvas id="timelineChart" style="display: none;"></canvas>
+                </div>
+            </div>
 
-                <!-- Timeline Chart -->
-                <div class="chart-card" style="margin-bottom: 2rem;">
-                    <div class="chart-header">
-                        <h3>📅 Downtime Timeline</h3>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="timelineChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Search Panel -->
-                <div class="search-panel">
-                    <div class="search-panel-header">
-                        <h3>🔍 Event Code Search & Details</h3>
-                        <div class="search-box">
-                            <span class="search-icon">🔎</span>
-                            <input type="text" placeholder="Search event codes or descriptions..." id="eventSearch" oninput="filterEvents()">
-                        </div>
-                    </div>
-                    <div class="event-table-container">
-                        <table class="event-table">
-                            <thead>
-                                <tr>
-                                    <th>Event Code</th>
-                                    <th>Description</th>
-                                    <th>Start Time</th>
-                                    <th>End Time</th>
-                                    <th>Duration</th>
-                                </tr>
-                            </thead>
-                            <tbody id="eventTableBody">
-                                <!-- Populated dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="pagination" id="pagination">
-                        <!-- Populated dynamically -->
+            <!-- Search Panel -->
+            <div class="search-panel">
+                <div class="search-panel-header">
+                    <h3>🔍 Event Details & Search</h3>
+                    <div class="search-box">
+                        <span class="search-icon">🔎</span>
+                        <input type="text" placeholder="Search event codes or descriptions..." id="eventSearch">
                     </div>
                 </div>
-            </section>
+                <div class="event-table-container">
+                    <table class="event-table">
+                        <thead>
+                            <tr>
+                                <th>Event Code</th>
+                                <th>Description</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventTableBody">
+                            <tr>
+                                <td colspan="5">
+                                    <div class="table-empty">
+                                        <div class="table-empty-icon">📋</div>
+                                        <p>Import data to view events</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pagination"></div>
+            </div>
         </main>
     </div>
 
-    <!-- Paste Modal -->
-    <div class="modal-overlay" id="pasteModal">
+    <!-- Expanded Event Modal -->
+    <div class="modal-overlay" id="expandedModal">
         <div class="modal">
             <div class="modal-header">
-                <h2>Paste Excel Data</h2>
-                <button class="modal-close" onclick="closePasteModal()">×</button>
+                <h3 id="expandedTitle">Event Details</h3>
+                <button class="modal-close" id="closeModalBtn">×</button>
             </div>
-            <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-                Copy your Excel data (Ctrl+C) and paste it below (Ctrl+V). Include headers in the first row.
-            </p>
-            <textarea class="paste-area" id="pasteArea" placeholder="Paste your Excel data here..."></textarea>
-            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                <button class="btn btn-secondary" onclick="closePasteModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="processPastedData()">Process Data</button>
-            </div>
+            <div class="expanded-stats" id="expandedStats"></div>
+            <div class="recent-events-title">Recent Events</div>
+            <div id="recentEventsList"></div>
         </div>
     </div>
 
-    <!-- Column Mapping Modal -->
-    <div class="modal-overlay" id="mappingModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Map Your Columns</h2>
-                <button class="modal-close" onclick="closeMappingModal()">×</button>
-            </div>
-            <div class="column-mapping">
-                <h3>Match your Excel columns to the dashboard fields:</h3>
-                <div class="mapping-grid" id="mappingGrid">
-                    <!-- Populated dynamically -->
-                </div>
-            </div>
-            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                <button class="btn btn-secondary" onclick="closeMappingModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="applyColumnMapping()">Create Dashboard</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Expanded Bar Info -->
-    <div class="expanded-overlay" id="expandedOverlay" onclick="closeExpandedInfo()"></div>
-    <div class="chart-expanded-info" id="expandedInfo">
-        <div class="expanded-header">
-            <h3 id="expandedTitle">Event Details</h3>
-            <button class="modal-close" onclick="closeExpandedInfo()">×</button>
-        </div>
-        <div class="expanded-stats" id="expandedStats">
-            <!-- Populated dynamically -->
-        </div>
-        <div id="expandedEventsList"></div>
-    </div>
+    <!-- Load Chart.js and SheetJS from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        // Global State
+        // ===== GLOBAL STATE =====
         let rawData = [];
         let processedData = [];
         let filteredData = [];
@@ -1311,65 +1339,99 @@
         let currentPage = 1;
         const itemsPerPage = 10;
 
-        // Required fields for the dashboard
         const requiredFields = [
-            { id: 'eventCode', label: 'Event Code', description: 'The code identifying the event type' },
-            { id: 'eventDescription', label: 'Event Description', description: 'Description of the downtime event' },
-            { id: 'startTime', label: 'Start Time', description: 'When the event started' },
-            { id: 'duration', label: 'Duration', description: 'How long the event lasted (in minutes or as time)' }
+            { id: 'eventCode', label: 'Event Code' },
+            { id: 'eventDescription', label: 'Event Description' },
+            { id: 'startTime', label: 'Start Time' },
+            { id: 'duration', label: 'Duration' }
         ];
 
-        // Theme Management
+        // ===== DOM ELEMENTS =====
+        const elements = {
+            themeToggle: document.getElementById('themeToggle'),
+            dataStatus: document.getElementById('dataStatus'),
+            statusText: document.getElementById('statusText'),
+            uploadBtn: document.getElementById('uploadBtn'),
+            pasteBtn: document.getElementById('pasteBtn'),
+            sampleBtn: document.getElementById('sampleBtn'),
+            clearBtn: document.getElementById('clearBtn'),
+            fileInput: document.getElementById('fileInput'),
+            dropZone: document.getElementById('dropZone'),
+            cancelDropBtn: document.getElementById('cancelDropBtn'),
+            pasteSection: document.getElementById('pasteSection'),
+            pasteArea: document.getElementById('pasteArea'),
+            cancelPasteBtn: document.getElementById('cancelPasteBtn'),
+            processPasteBtn: document.getElementById('processPasteBtn'),
+            mappingSection: document.getElementById('mappingSection'),
+            mappingGrid: document.getElementById('mappingGrid'),
+            cancelMappingBtn: document.getElementById('cancelMappingBtn'),
+            applyMappingBtn: document.getElementById('applyMappingBtn'),
+            startDateFilter: document.getElementById('startDateFilter'),
+            endDateFilter: document.getElementById('endDateFilter'),
+            eventCodeFilter: document.getElementById('eventCodeFilter'),
+            applyFiltersBtn: document.getElementById('applyFiltersBtn'),
+            resetFiltersBtn: document.getElementById('resetFiltersBtn'),
+            chartViewMode: document.getElementById('chartViewMode'),
+            eventSearch: document.getElementById('eventSearch'),
+            loadingOverlay: document.getElementById('loadingOverlay'),
+            expandedModal: document.getElementById('expandedModal'),
+            closeModalBtn: document.getElementById('closeModalBtn'),
+            mainChartEmpty: document.getElementById('mainChartEmpty'),
+            timelineChartEmpty: document.getElementById('timelineChartEmpty'),
+            mainChartCanvas: document.getElementById('mainChart'),
+            timelineChartCanvas: document.getElementById('timelineChart')
+        };
+
+        // ===== THEME MANAGEMENT =====
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
         function toggleTheme() {
             const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-
-            // Update charts with new theme
             if (mainChart) updateMainChart();
             if (timelineChart) updateTimelineChart();
         }
 
-        // Initialize theme from localStorage
-        (function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
+        // ===== UI HELPERS =====
+        function showLoading() {
+            elements.loadingOverlay.classList.add('active');
+        }
 
-        // File Upload Handling
-        const dropZone = document.getElementById('dropZone');
+        function hideLoading() {
+            elements.loadingOverlay.classList.remove('active');
+        }
 
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('drag-over');
-        });
+        function hideAllSections() {
+            elements.dropZone.classList.remove('active');
+            elements.pasteSection.classList.remove('active');
+            elements.mappingSection.classList.remove('active');
+        }
 
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('drag-over');
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('drag-over');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                processFile(files[0]);
-            }
-        });
-
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                processFile(file);
+        function updateDataStatus() {
+            if (processedData.length > 0) {
+                elements.dataStatus.classList.remove('no-data');
+                elements.dataStatus.classList.add('has-data');
+                elements.statusText.textContent = `${processedData.length} events loaded`;
+                elements.clearBtn.style.display = 'inline-flex';
+            } else {
+                elements.dataStatus.classList.remove('has-data');
+                elements.dataStatus.classList.add('no-data');
+                elements.statusText.textContent = 'No data loaded';
+                elements.clearBtn.style.display = 'none';
             }
         }
 
-        function processFile(file) {
+        // ===== FILE HANDLING =====
+        function handleFileUpload(file) {
+            if (!file) return;
             showLoading();
-            const reader = new FileReader();
 
+            const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
@@ -1378,37 +1440,26 @@
                     rawData = XLSX.utils.sheet_to_json(firstSheet, { raw: false, dateNF: 'yyyy-mm-dd hh:mm:ss' });
 
                     if (rawData.length === 0) {
-                        alert('No data found in the Excel file.');
+                        alert('No data found in file.');
                         hideLoading();
                         return;
                     }
 
                     hideLoading();
-                    openMappingModal();
+                    hideAllSections();
+                    showMappingSection();
                 } catch (error) {
-                    console.error('Error processing file:', error);
-                    alert('Error processing file. Please make sure it\'s a valid Excel file.');
+                    console.error('Error:', error);
+                    alert('Error processing file.');
                     hideLoading();
                 }
             };
-
             reader.readAsArrayBuffer(file);
         }
 
-        // Paste Modal Functions
-        function openPasteModal() {
-            document.getElementById('pasteModal').classList.add('active');
-            document.getElementById('pasteArea').focus();
-        }
-
-        function closePasteModal() {
-            document.getElementById('pasteModal').classList.remove('active');
-            document.getElementById('pasteArea').value = '';
-        }
-
         function processPastedData() {
-            const pastedText = document.getElementById('pasteArea').value.trim();
-            if (!pastedText) {
+            const text = elements.pasteArea.value.trim();
+            if (!text) {
                 alert('Please paste some data first.');
                 return;
             }
@@ -1416,8 +1467,7 @@
             showLoading();
 
             try {
-                // Parse tab-separated or comma-separated data
-                const lines = pastedText.split('\n');
+                const lines = text.split('\n');
                 const delimiter = lines[0].includes('\t') ? '\t' : ',';
                 const headers = lines[0].split(delimiter).map(h => h.trim());
 
@@ -1434,49 +1484,45 @@
                 }
 
                 if (rawData.length === 0) {
-                    alert('No data rows found. Make sure to include headers and data.');
+                    alert('No data rows found.');
                     hideLoading();
                     return;
                 }
 
                 hideLoading();
-                closePasteModal();
-                openMappingModal();
+                hideAllSections();
+                showMappingSection();
             } catch (error) {
-                console.error('Error processing pasted data:', error);
-                alert('Error processing pasted data. Please check the format.');
+                console.error('Error:', error);
+                alert('Error processing pasted data.');
                 hideLoading();
             }
         }
 
-        // Column Mapping Modal
-        function openMappingModal() {
-            const grid = document.getElementById('mappingGrid');
+        // ===== COLUMN MAPPING =====
+        function showMappingSection() {
             const columns = Object.keys(rawData[0] || {});
 
-            grid.innerHTML = requiredFields.map(field => `
+            elements.mappingGrid.innerHTML = requiredFields.map(field => `
                 <div class="mapping-item">
                     <label>${field.label}</label>
                     <select id="map_${field.id}">
-                        <option value="">-- Select Column --</option>
+                        <option value="">-- Select --</option>
                         ${columns.map(col => `<option value="${col}">${col}</option>`).join('')}
                     </select>
-                    <small style="color: var(--text-muted); font-size: 0.75rem;">${field.description}</small>
                 </div>
             `).join('');
 
-            // Auto-detect columns based on common names
             autoDetectColumns(columns);
-
-            document.getElementById('mappingModal').classList.add('active');
+            elements.mappingSection.classList.add('active');
         }
 
         function autoDetectColumns(columns) {
             const patterns = {
-                eventCode: ['event code', 'eventcode', 'code', 'event_code', 'fault code', 'faultcode', 'error code'],
+                eventCode: ['event code', 'eventcode', 'code', 'event_code', 'fault code', 'error code'],
                 eventDescription: ['description', 'event description', 'desc', 'event_description', 'fault description', 'message', 'event name'],
-                startTime: ['start time', 'starttime', 'start_time', 'start', 'time', 'datetime', 'date time', 'timestamp', 'event time'],
-                duration: ['duration', 'length', 'time', 'minutes', 'mins', 'elapsed', 'downtime']
+                startTime: ['start time', 'starttime', 'start_time', 'start', 'time', 'datetime', 'timestamp', 'event time'],
+                duration: ['duration', 'length', 'minutes', 'mins', 'elapsed', 'downtime']
             };
 
             columns.forEach(col => {
@@ -1492,34 +1538,29 @@
             });
         }
 
-        function closeMappingModal() {
-            document.getElementById('mappingModal').classList.remove('active');
-        }
-
         function applyColumnMapping() {
             columnMapping = {};
             let allMapped = true;
 
             requiredFields.forEach(field => {
                 const select = document.getElementById(`map_${field.id}`);
-                const value = select.value;
-                if (!value) {
+                if (!select.value) {
                     allMapped = false;
                 } else {
-                    columnMapping[field.id] = value;
+                    columnMapping[field.id] = select.value;
                 }
             });
 
             if (!allMapped) {
-                alert('Please map all required columns before proceeding.');
+                alert('Please map all columns.');
                 return;
             }
 
-            closeMappingModal();
+            hideAllSections();
             processData();
         }
 
-        // Data Processing
+        // ===== DATA PROCESSING =====
         function processData() {
             showLoading();
 
@@ -1529,13 +1570,9 @@
                 const startTimeRaw = row[columnMapping.startTime] || '';
                 const durationRaw = row[columnMapping.duration] || 0;
 
-                // Parse start time
                 let startTime = parseDateTime(startTimeRaw);
-
-                // Parse duration (handle various formats)
                 let durationMinutes = parseDuration(durationRaw);
 
-                // Calculate end time
                 let endTime = null;
                 if (startTime && durationMinutes > 0) {
                     endTime = new Date(startTime.getTime() + durationMinutes * 60000);
@@ -1545,9 +1582,9 @@
                     id: index,
                     eventCode: eventCode.toString(),
                     eventDescription: eventDescription.toString(),
-                    startTime: startTime,
-                    endTime: endTime,
-                    durationMinutes: durationMinutes,
+                    startTime,
+                    endTime,
+                    durationMinutes,
                     raw: row
                 };
             }).filter(item => item.startTime !== null);
@@ -1555,39 +1592,26 @@
             filteredData = [...processedData];
 
             hideLoading();
-            showDashboard();
+            updateDataStatus();
             updateDashboard();
         }
 
         function parseDateTime(value) {
             if (!value) return null;
-
-            // If already a Date object
             if (value instanceof Date) return value;
 
-            // Try parsing various formats
             let date = new Date(value);
             if (!isNaN(date.getTime())) return date;
-
-            // Try MM/DD/YYYY HH:MM format
-            const parts = value.toString().split(/[\s,]+/);
-            if (parts.length >= 2) {
-                date = new Date(parts.join(' '));
-                if (!isNaN(date.getTime())) return date;
-            }
 
             return null;
         }
 
         function parseDuration(value) {
             if (!value) return 0;
-
-            // If numeric, assume minutes
             if (typeof value === 'number') return value;
 
             const str = value.toString().trim();
 
-            // Check for HH:MM:SS format
             const timeMatch = str.match(/(\d+):(\d+)(?::(\d+))?/);
             if (timeMatch) {
                 const hours = parseInt(timeMatch[1]) || 0;
@@ -1596,7 +1620,6 @@
                 return hours * 60 + minutes + seconds / 60;
             }
 
-            // Check for "X hours Y minutes" format
             const hourMatch = str.match(/(\d+)\s*h/i);
             const minMatch = str.match(/(\d+)\s*m/i);
             let total = 0;
@@ -1604,59 +1627,26 @@
             if (minMatch) total += parseInt(minMatch[1]);
             if (total > 0) return total;
 
-            // Try parsing as plain number
             const num = parseFloat(str);
             return isNaN(num) ? 0 : num;
         }
 
         function formatDuration(minutes) {
             if (!minutes || minutes <= 0) return '0m';
-
             const hours = Math.floor(minutes / 60);
             const mins = Math.round(minutes % 60);
-
-            if (hours > 0) {
-                return `${hours}h ${mins}m`;
-            }
-            return `${mins}m`;
+            return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
         }
 
         function formatDateTime(date) {
             if (!date) return '-';
             return date.toLocaleString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
+                month: 'short', day: 'numeric', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
             });
         }
 
-        // Dashboard Display
-        function showDashboard() {
-            document.getElementById('uploadSection').style.display = 'none';
-            document.getElementById('dashboard').classList.add('active');
-        }
-
-        function resetData() {
-            rawData = [];
-            processedData = [];
-            filteredData = [];
-            columnMapping = {};
-
-            document.getElementById('uploadSection').style.display = 'block';
-            document.getElementById('dashboard').classList.remove('active');
-
-            if (mainChart) {
-                mainChart.destroy();
-                mainChart = null;
-            }
-            if (timelineChart) {
-                timelineChart.destroy();
-                timelineChart = null;
-            }
-        }
-
+        // ===== DASHBOARD UPDATE =====
         function updateDashboard() {
             updateStats();
             updateFilters();
@@ -1667,48 +1657,42 @@
         }
 
         function updateStats() {
-            const totalEvents = filteredData.length;
-            const totalMinutes = filteredData.reduce((sum, item) => sum + item.durationMinutes, 0);
-            const avgMinutes = totalEvents > 0 ? totalMinutes / totalEvents : 0;
+            const total = filteredData.length;
+            const totalMin = filteredData.reduce((sum, item) => sum + item.durationMinutes, 0);
+            const avgMin = total > 0 ? totalMin / total : 0;
             const uniqueCodes = new Set(filteredData.map(item => item.eventCode)).size;
 
-            document.getElementById('totalEvents').textContent = totalEvents.toLocaleString();
-            document.getElementById('totalDowntime').textContent = formatDuration(totalMinutes);
-            document.getElementById('avgDuration').textContent = formatDuration(avgMinutes);
+            document.getElementById('totalEvents').textContent = total.toLocaleString();
+            document.getElementById('totalDowntime').textContent = formatDuration(totalMin);
+            document.getElementById('avgDuration').textContent = formatDuration(avgMin);
             document.getElementById('uniqueCodes').textContent = uniqueCodes;
         }
 
         function updateFilters() {
-            // Update event code dropdown
-            const eventCodes = [...new Set(processedData.map(item => item.eventCode))].sort();
-            const select = document.getElementById('eventCodeFilter');
-            select.innerHTML = '<option value="">All Events</option>' +
-                eventCodes.map(code => `<option value="${code}">${code}</option>`).join('');
+            const codes = [...new Set(processedData.map(item => item.eventCode))].sort();
+            elements.eventCodeFilter.innerHTML = '<option value="">All Events</option>' +
+                codes.map(code => `<option value="${code}">${code}</option>`).join('');
 
-            // Set date range defaults
             if (processedData.length > 0) {
                 const dates = processedData.filter(d => d.startTime).map(d => d.startTime);
-                const minDate = new Date(Math.min(...dates));
-                const maxDate = new Date(Math.max(...dates));
-
-                document.getElementById('startDateFilter').value = minDate.toISOString().slice(0, 16);
-                document.getElementById('endDateFilter').value = maxDate.toISOString().slice(0, 16);
+                if (dates.length > 0) {
+                    const minDate = new Date(Math.min(...dates));
+                    const maxDate = new Date(Math.max(...dates));
+                    elements.startDateFilter.value = minDate.toISOString().slice(0, 16);
+                    elements.endDateFilter.value = maxDate.toISOString().slice(0, 16);
+                }
             }
         }
 
         function applyFilters() {
-            const startFilter = document.getElementById('startDateFilter').value;
-            const endFilter = document.getElementById('endDateFilter').value;
-            const eventCodeFilter = document.getElementById('eventCodeFilter').value;
+            const startFilter = elements.startDateFilter.value;
+            const endFilter = elements.endDateFilter.value;
+            const codeFilter = elements.eventCodeFilter.value;
 
             filteredData = processedData.filter(item => {
-                // Date filter
                 if (startFilter && item.startTime < new Date(startFilter)) return false;
                 if (endFilter && item.startTime > new Date(endFilter)) return false;
-
-                // Event code filter
-                if (eventCodeFilter && item.eventCode !== eventCodeFilter) return false;
-
+                if (codeFilter && item.eventCode !== codeFilter) return false;
                 return true;
             });
 
@@ -1717,323 +1701,216 @@
         }
 
         function resetFilters() {
-            document.getElementById('eventCodeFilter').value = '';
-            document.getElementById('eventSearch').value = '';
+            elements.eventCodeFilter.value = '';
+            elements.eventSearch.value = '';
             filteredData = [...processedData];
             currentPage = 1;
             updateDashboard();
         }
 
-        // Charts
+        // ===== CHARTS =====
         function updateMainChart() {
-            const ctx = document.getElementById('mainChart').getContext('2d');
-            const viewMode = document.getElementById('chartViewMode').value;
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const viewMode = elements.chartViewMode.value;
 
-            // Aggregate data by event code
+            if (filteredData.length === 0) {
+                elements.mainChartEmpty.style.display = 'flex';
+                elements.mainChartCanvas.style.display = 'none';
+                if (mainChart) { mainChart.destroy(); mainChart = null; }
+                return;
+            }
+
+            elements.mainChartEmpty.style.display = 'none';
+            elements.mainChartCanvas.style.display = 'block';
+
             const aggregated = {};
             filteredData.forEach(item => {
                 const key = item.eventDescription || item.eventCode;
-                if (!aggregated[key]) {
-                    aggregated[key] = { count: 0, duration: 0, code: item.eventCode };
-                }
+                if (!aggregated[key]) aggregated[key] = { count: 0, duration: 0, code: item.eventCode };
                 aggregated[key].count++;
                 aggregated[key].duration += item.durationMinutes;
             });
 
-            // Sort and get top 10
             const sorted = Object.entries(aggregated)
                 .sort((a, b) => viewMode === 'duration' ? b[1].duration - a[1].duration : b[1].count - a[1].count)
                 .slice(0, 10);
 
-            const labels = sorted.map(([key]) => key.length > 30 ? key.substring(0, 30) + '...' : key);
+            const labels = sorted.map(([key]) => key.length > 25 ? key.substring(0, 25) + '...' : key);
             const data = sorted.map(([, val]) => viewMode === 'duration' ? val.duration : val.count);
             const fullLabels = sorted.map(([key]) => key);
+            const colors = sorted.map((_, i) => `hsl(${250 + i * 12}, 70%, 60%)`);
 
-            // Generate gradient colors
-            const colors = sorted.map((_, i) => {
-                const hue = 250 + (i * 15);
-                return `hsl(${hue}, 70%, 60%)`;
-            });
+            if (mainChart) mainChart.destroy();
 
-            if (mainChart) {
-                mainChart.destroy();
-            }
-
-            mainChart = new Chart(ctx, {
+            mainChart = new Chart(elements.mainChartCanvas.getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels,
                     datasets: [{
-                        label: viewMode === 'duration' ? 'Duration (minutes)' : 'Event Count',
-                        data: data,
+                        label: viewMode === 'duration' ? 'Duration (min)' : 'Count',
+                        data,
                         backgroundColor: colors,
-                        borderRadius: 8,
-                        borderSkipped: false,
+                        borderRadius: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     indexAxis: 'y',
-                    onClick: (event, elements) => {
+                    onClick: (e, elements) => {
                         if (elements.length > 0) {
-                            const index = elements[0].index;
-                            const key = fullLabels[index];
-                            showExpandedInfo(key, aggregated[key]);
+                            const idx = elements[0].index;
+                            showExpandedInfo(fullLabels[idx], aggregated[fullLabels[idx]]);
                         }
                     },
                     plugins: {
-                        legend: {
-                            display: false
-                        },
+                        legend: { display: false },
                         tooltip: {
-                            backgroundColor: isDark ? '#1e1e35' : '#ffffff',
-                            titleColor: isDark ? '#ffffff' : '#1e293b',
+                            backgroundColor: isDark ? '#1e1e35' : '#fff',
+                            titleColor: isDark ? '#fff' : '#1e293b',
                             bodyColor: isDark ? '#a0a0b0' : '#64748b',
                             borderColor: isDark ? '#2a2a45' : '#e2e8f0',
                             borderWidth: 1,
-                            padding: 12,
-                            displayColors: false,
                             callbacks: {
-                                title: (items) => fullLabels[items[0].dataIndex],
-                                label: (item) => {
+                                title: items => fullLabels[items[0].dataIndex],
+                                label: item => {
                                     const val = sorted[item.dataIndex][1];
-                                    return [
-                                        `Duration: ${formatDuration(val.duration)}`,
-                                        `Count: ${val.count} events`,
-                                        ``,
-                                        `Click to expand`
-                                    ];
+                                    return [`Duration: ${formatDuration(val.duration)}`, `Count: ${val.count}`, '', 'Click for details'];
                                 }
                             }
                         }
                     },
                     scales: {
-                        x: {
-                            grid: {
-                                color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'
-                            },
-                            ticks: {
-                                color: isDark ? '#a0a0b0' : '#64748b'
-                            }
-                        },
-                        y: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: isDark ? '#a0a0b0' : '#64748b'
-                            }
-                        }
+                        x: { grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, ticks: { color: isDark ? '#a0a0b0' : '#64748b' } },
+                        y: { grid: { display: false }, ticks: { color: isDark ? '#a0a0b0' : '#64748b' } }
                     }
                 }
             });
         }
 
         function updateTimelineChart() {
-            const ctx = document.getElementById('timelineChart').getContext('2d');
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 
-            // Group by date
+            if (filteredData.length === 0) {
+                elements.timelineChartEmpty.style.display = 'flex';
+                elements.timelineChartCanvas.style.display = 'none';
+                if (timelineChart) { timelineChart.destroy(); timelineChart = null; }
+                return;
+            }
+
+            elements.timelineChartEmpty.style.display = 'none';
+            elements.timelineChartCanvas.style.display = 'block';
+
             const byDate = {};
             filteredData.forEach(item => {
                 if (item.startTime) {
-                    const dateKey = item.startTime.toISOString().split('T')[0];
-                    if (!byDate[dateKey]) {
-                        byDate[dateKey] = { count: 0, duration: 0 };
-                    }
-                    byDate[dateKey].count++;
-                    byDate[dateKey].duration += item.durationMinutes;
+                    const key = item.startTime.toISOString().split('T')[0];
+                    if (!byDate[key]) byDate[key] = { count: 0, duration: 0 };
+                    byDate[key].count++;
+                    byDate[key].duration += item.durationMinutes;
                 }
             });
 
             const sortedDates = Object.keys(byDate).sort();
             const labels = sortedDates.map(d => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-            const durationData = sortedDates.map(d => byDate[d].duration);
+            const durData = sortedDates.map(d => byDate[d].duration);
             const countData = sortedDates.map(d => byDate[d].count);
 
-            if (timelineChart) {
-                timelineChart.destroy();
-            }
+            if (timelineChart) timelineChart.destroy();
 
-            timelineChart = new Chart(ctx, {
+            timelineChart = new Chart(elements.timelineChartCanvas.getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: labels,
+                    labels,
                     datasets: [
-                        {
-                            label: 'Downtime (minutes)',
-                            data: durationData,
-                            borderColor: '#6366f1',
-                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                            fill: true,
-                            tension: 0.4,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Event Count',
-                            data: countData,
-                            borderColor: '#8b5cf6',
-                            backgroundColor: 'transparent',
-                            borderDash: [5, 5],
-                            tension: 0.4,
-                            yAxisID: 'y1'
-                        }
+                        { label: 'Downtime (min)', data: durData, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,0.1)', fill: true, tension: 0.4, yAxisID: 'y' },
+                        { label: 'Events', data: countData, borderColor: '#8b5cf6', borderDash: [5, 5], tension: 0.4, yAxisID: 'y1' }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
+                    interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                color: isDark ? '#a0a0b0' : '#64748b'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: isDark ? '#1e1e35' : '#ffffff',
-                            titleColor: isDark ? '#ffffff' : '#1e293b',
-                            bodyColor: isDark ? '#a0a0b0' : '#64748b',
-                            borderColor: isDark ? '#2a2a45' : '#e2e8f0',
-                            borderWidth: 1
-                        }
+                        legend: { position: 'top', labels: { color: isDark ? '#a0a0b0' : '#64748b' } }
                     },
                     scales: {
-                        x: {
-                            grid: {
-                                color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'
-                            },
-                            ticks: {
-                                color: isDark ? '#a0a0b0' : '#64748b'
-                            }
-                        },
-                        y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            grid: {
-                                color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'
-                            },
-                            ticks: {
-                                color: isDark ? '#a0a0b0' : '#64748b'
-                            },
-                            title: {
-                                display: true,
-                                text: 'Duration (minutes)',
-                                color: isDark ? '#a0a0b0' : '#64748b'
-                            }
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            grid: {
-                                drawOnChartArea: false
-                            },
-                            ticks: {
-                                color: isDark ? '#a0a0b0' : '#64748b'
-                            },
-                            title: {
-                                display: true,
-                                text: 'Event Count',
-                                color: isDark ? '#a0a0b0' : '#64748b'
-                            }
-                        }
+                        x: { grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, ticks: { color: isDark ? '#a0a0b0' : '#64748b' } },
+                        y: { position: 'left', grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, ticks: { color: isDark ? '#a0a0b0' : '#64748b' }, title: { display: true, text: 'Duration (min)', color: isDark ? '#a0a0b0' : '#64748b' } },
+                        y1: { position: 'right', grid: { drawOnChartArea: false }, ticks: { color: isDark ? '#a0a0b0' : '#64748b' }, title: { display: true, text: 'Count', color: isDark ? '#a0a0b0' : '#64748b' } }
                     }
                 }
             });
         }
 
         function updateTopDowntime() {
-            // Get top 5 by duration
+            const container = document.getElementById('topDowntimeList');
+
+            if (filteredData.length === 0) {
+                container.innerHTML = '<div class="downtime-empty"><div class="downtime-empty-icon">📋</div><p>No events to display</p></div>';
+                return;
+            }
+
             const aggregated = {};
             filteredData.forEach(item => {
                 const key = item.eventDescription || item.eventCode;
-                if (!aggregated[key]) {
-                    aggregated[key] = { count: 0, duration: 0, code: item.eventCode };
-                }
+                if (!aggregated[key]) aggregated[key] = { count: 0, duration: 0, code: item.eventCode };
                 aggregated[key].count++;
                 aggregated[key].duration += item.durationMinutes;
             });
 
-            const top5 = Object.entries(aggregated)
-                .sort((a, b) => b[1].duration - a[1].duration)
-                .slice(0, 5);
+            const top5 = Object.entries(aggregated).sort((a, b) => b[1].duration - a[1].duration).slice(0, 5);
 
-            const container = document.getElementById('topDowntimeList');
-
-            if (top5.length === 0) {
-                container.innerHTML = '<div class="no-data"><div class="no-data-icon">📊</div><p>No downtime events to display</p></div>';
-                return;
-            }
-
-            container.innerHTML = top5.map(([key, val], index) => `
-                <div class="downtime-item" onclick="filterByEventDescription('${key.replace(/'/g, "\\'")}')">
-                    <div class="downtime-rank">${index + 1}</div>
+            container.innerHTML = top5.map(([key, val], i) => `
+                <div class="downtime-item" onclick="filterByDescription('${key.replace(/'/g, "\\'")}')">
+                    <div class="downtime-rank">${i + 1}</div>
                     <div class="downtime-info">
                         <h4>${key}</h4>
                         <p>${val.code} • ${val.count} events</p>
                     </div>
                     <div class="downtime-duration">
                         <div class="time">${formatDuration(val.duration)}</div>
-                        <div class="label">total downtime</div>
+                        <div class="label">total</div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function filterByEventDescription(description) {
-            document.getElementById('eventSearch').value = description;
+        function filterByDescription(desc) {
+            elements.eventSearch.value = desc;
             filterEvents();
         }
 
         function updateEventTable() {
-            const searchTerm = document.getElementById('eventSearch').value.toLowerCase();
-
+            const search = elements.eventSearch.value.toLowerCase();
             let displayData = filteredData;
-            if (searchTerm) {
+
+            if (search) {
                 displayData = filteredData.filter(item =>
-                    item.eventCode.toLowerCase().includes(searchTerm) ||
-                    item.eventDescription.toLowerCase().includes(searchTerm)
+                    item.eventCode.toLowerCase().includes(search) ||
+                    item.eventDescription.toLowerCase().includes(search)
                 );
             }
 
-            // Calculate pagination
             const totalPages = Math.ceil(displayData.length / itemsPerPage);
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const pageData = displayData.slice(startIndex, endIndex);
-
-            // Find max duration for bar visualization
-            const maxDuration = Math.max(...displayData.map(d => d.durationMinutes), 1);
+            const start = (currentPage - 1) * itemsPerPage;
+            const pageData = displayData.slice(start, start + itemsPerPage);
+            const maxDur = Math.max(...displayData.map(d => d.durationMinutes), 1);
 
             const tbody = document.getElementById('eventTableBody');
 
             if (pageData.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" style="text-align: center; padding: 3rem;">
-                            <div class="no-data-icon">🔍</div>
-                            <p style="color: var(--text-secondary);">No events found matching your search</p>
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="5"><div class="table-empty"><div class="table-empty-icon">📋</div><p>${processedData.length === 0 ? 'Import data to view events' : 'No events match your search'}</p></div></td></tr>`;
             } else {
                 tbody.innerHTML = pageData.map(item => `
-                    <tr onclick="selectEvent(${item.id})">
+                    <tr>
                         <td><span class="event-code-badge">${item.eventCode}</span></td>
                         <td>${item.eventDescription}</td>
                         <td>${formatDateTime(item.startTime)}</td>
                         <td>${formatDateTime(item.endTime)}</td>
                         <td>
                             <div class="duration-bar">
-                                <div class="duration-bar-fill" style="width: ${(item.durationMinutes / maxDuration) * 100}%"></div>
+                                <div class="duration-bar-fill" style="width: ${(item.durationMinutes / maxDur) * 100}%"></div>
                                 <span>${formatDuration(item.durationMinutes)}</span>
                             </div>
                         </td>
@@ -2041,20 +1918,14 @@
                 `).join('');
             }
 
-            // Update pagination
             updatePagination(totalPages);
         }
 
         function updatePagination(totalPages) {
             const container = document.getElementById('pagination');
-
-            if (totalPages <= 1) {
-                container.innerHTML = '';
-                return;
-            }
-
+            if (totalPages <= 1) { container.innerHTML = ''; return; }
             container.innerHTML = `
-                <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>← Previous</button>
+                <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>← Prev</button>
                 <span>Page ${currentPage} of ${totalPages}</span>
                 <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next →</button>
             `;
@@ -2069,18 +1940,18 @@
             currentPage = 1;
             updateEventTable();
 
-            // Also update the chart and top downtime based on search
-            const searchTerm = document.getElementById('eventSearch').value.toLowerCase();
-            if (searchTerm) {
-                const originalFiltered = [...filteredData];
-                filteredData = filteredData.filter(item =>
-                    item.eventCode.toLowerCase().includes(searchTerm) ||
-                    item.eventDescription.toLowerCase().includes(searchTerm)
+            const search = elements.eventSearch.value.toLowerCase();
+            if (search) {
+                const filtered = filteredData.filter(item =>
+                    item.eventCode.toLowerCase().includes(search) ||
+                    item.eventDescription.toLowerCase().includes(search)
                 );
+                const original = [...filteredData];
+                filteredData = filtered;
                 updateStats();
                 updateMainChart();
                 updateTopDowntime();
-                filteredData = originalFiltered;
+                filteredData = original;
             } else {
                 updateStats();
                 updateMainChart();
@@ -2088,105 +1959,54 @@
             }
         }
 
-        function selectEvent(id) {
-            const rows = document.querySelectorAll('.event-table tbody tr');
-            rows.forEach(row => row.classList.remove('selected'));
-            event.currentTarget.classList.add('selected');
-        }
-
-        // Expanded Info for Bar Click
+        // ===== EXPANDED INFO MODAL =====
         function showExpandedInfo(key, data) {
             document.getElementById('expandedTitle').textContent = key;
 
-            const events = filteredData.filter(item =>
-                (item.eventDescription || item.eventCode) === key
-            );
+            const events = filteredData.filter(item => (item.eventDescription || item.eventCode) === key);
 
             document.getElementById('expandedStats').innerHTML = `
-                <div class="expanded-stat">
-                    <label>Total Duration</label>
-                    <span>${formatDuration(data.duration)}</span>
-                </div>
-                <div class="expanded-stat">
-                    <label>Event Count</label>
-                    <span>${data.count}</span>
-                </div>
-                <div class="expanded-stat">
-                    <label>Average Duration</label>
-                    <span>${formatDuration(data.duration / data.count)}</span>
-                </div>
-                <div class="expanded-stat">
-                    <label>Event Code</label>
-                    <span>${data.code}</span>
-                </div>
+                <div class="expanded-stat"><label>Total Duration</label><span>${formatDuration(data.duration)}</span></div>
+                <div class="expanded-stat"><label>Event Count</label><span>${data.count}</span></div>
+                <div class="expanded-stat"><label>Avg Duration</label><span>${formatDuration(data.duration / data.count)}</span></div>
+                <div class="expanded-stat"><label>Event Code</label><span>${data.code}</span></div>
             `;
 
-            // Show recent events
-            const recentEvents = events.slice(0, 5);
-            document.getElementById('expandedEventsList').innerHTML = `
-                <h4 style="margin-bottom: 0.75rem; color: var(--text-secondary); font-size: 0.9rem;">Recent Events</h4>
-                ${recentEvents.map(e => `
-                    <div style="background: var(--bg-tertiary); padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem;">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="color: var(--text-primary);">${formatDateTime(e.startTime)}</span>
-                            <span style="color: var(--danger); font-weight: 600;">${formatDuration(e.durationMinutes)}</span>
-                        </div>
-                    </div>
-                `).join('')}
-            `;
+            document.getElementById('recentEventsList').innerHTML = events.slice(0, 5).map(e => `
+                <div class="recent-event">
+                    <span>${formatDateTime(e.startTime)}</span>
+                    <span>${formatDuration(e.durationMinutes)}</span>
+                </div>
+            `).join('');
 
-            document.getElementById('expandedOverlay').classList.add('active');
-            document.getElementById('expandedInfo').classList.add('active');
+            elements.expandedModal.classList.add('active');
         }
 
-        function closeExpandedInfo() {
-            document.getElementById('expandedOverlay').classList.remove('active');
-            document.getElementById('expandedInfo').classList.remove('active');
+        function closeModal() {
+            elements.expandedModal.classList.remove('active');
         }
 
-        // Loading functions
-        function showLoading() {
-            document.getElementById('loading').classList.add('active');
-        }
-
-        function hideLoading() {
-            document.getElementById('loading').classList.remove('active');
-        }
-
-        // Sample Data for Testing
+        // ===== SAMPLE DATA =====
         function loadSampleData() {
-            const eventCodes = ['ERR001', 'ERR002', 'ERR003', 'ERR004', 'ERR005', 'WARN001', 'WARN002', 'MAINT001', 'MAINT002'];
-            const descriptions = [
-                'Motor Overload Fault',
-                'Conveyor Belt Jam',
-                'Sensor Communication Error',
-                'Temperature Warning',
-                'Pressure Drop Alert',
-                'Routine Maintenance',
-                'Calibration Required',
-                'Power Fluctuation',
-                'Hydraulic System Leak'
-            ];
+            const codes = ['ERR001', 'ERR002', 'ERR003', 'ERR004', 'ERR005', 'WARN001', 'WARN002', 'MAINT001'];
+            const descs = ['Motor Overload Fault', 'Conveyor Belt Jam', 'Sensor Communication Error', 'Temperature Warning', 'Pressure Drop Alert', 'Routine Maintenance', 'Calibration Required', 'Power Fluctuation'];
 
-            const sampleData = [];
+            const sample = [];
             const baseDate = new Date();
             baseDate.setMonth(baseDate.getMonth() - 1);
 
-            for (let i = 0; i < 150; i++) {
-                const codeIndex = Math.floor(Math.random() * eventCodes.length);
+            for (let i = 0; i < 120; i++) {
+                const idx = Math.floor(Math.random() * codes.length);
                 const startTime = new Date(baseDate.getTime() + Math.random() * 30 * 24 * 60 * 60 * 1000);
-                const duration = Math.floor(Math.random() * 180) + 5;
-
-                sampleData.push({
-                    'Event Code': eventCodes[codeIndex],
-                    'Event Description': descriptions[codeIndex],
+                sample.push({
+                    'Event Code': codes[idx],
+                    'Event Description': descs[idx],
                     'Start Time': startTime.toISOString(),
-                    'Duration (min)': duration
+                    'Duration (min)': Math.floor(Math.random() * 150) + 5
                 });
             }
 
-            rawData = sampleData;
-
+            rawData = sample;
             columnMapping = {
                 eventCode: 'Event Code',
                 eventDescription: 'Event Description',
@@ -2194,23 +2014,113 @@
                 duration: 'Duration (min)'
             };
 
+            hideAllSections();
             processData();
         }
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            // Escape to close modals
-            if (e.key === 'Escape') {
-                closePasteModal();
-                closeMappingModal();
-                closeExpandedInfo();
-            }
+        function clearAllData() {
+            rawData = [];
+            processedData = [];
+            filteredData = [];
+            columnMapping = {};
+            currentPage = 1;
 
-            // Ctrl+V to open paste modal when on upload screen
-            if (e.ctrlKey && e.key === 'v' && document.getElementById('uploadSection').style.display !== 'none') {
-                openPasteModal();
-            }
-        });
+            if (mainChart) { mainChart.destroy(); mainChart = null; }
+            if (timelineChart) { timelineChart.destroy(); timelineChart = null; }
+
+            elements.startDateFilter.value = '';
+            elements.endDateFilter.value = '';
+            elements.eventCodeFilter.innerHTML = '<option value="">All Events</option>';
+            elements.eventSearch.value = '';
+            elements.pasteArea.value = '';
+
+            updateDataStatus();
+            updateDashboard();
+        }
+
+        // ===== EVENT LISTENERS =====
+        function setupEventListeners() {
+            elements.themeToggle.addEventListener('click', toggleTheme);
+
+            elements.uploadBtn.addEventListener('click', () => {
+                elements.fileInput.click();
+            });
+
+            elements.fileInput.addEventListener('change', (e) => {
+                if (e.target.files[0]) handleFileUpload(e.target.files[0]);
+            });
+
+            elements.pasteBtn.addEventListener('click', () => {
+                hideAllSections();
+                elements.pasteSection.classList.add('active');
+                elements.pasteArea.focus();
+            });
+
+            elements.cancelPasteBtn.addEventListener('click', () => {
+                hideAllSections();
+                elements.pasteArea.value = '';
+            });
+
+            elements.processPasteBtn.addEventListener('click', processPastedData);
+
+            elements.sampleBtn.addEventListener('click', loadSampleData);
+            elements.clearBtn.addEventListener('click', clearAllData);
+
+            elements.cancelDropBtn.addEventListener('click', hideAllSections);
+
+            elements.cancelMappingBtn.addEventListener('click', () => {
+                hideAllSections();
+                rawData = [];
+            });
+
+            elements.applyMappingBtn.addEventListener('click', applyColumnMapping);
+
+            elements.applyFiltersBtn.addEventListener('click', applyFilters);
+            elements.resetFiltersBtn.addEventListener('click', resetFilters);
+
+            elements.chartViewMode.addEventListener('change', updateMainChart);
+            elements.eventSearch.addEventListener('input', filterEvents);
+
+            elements.closeModalBtn.addEventListener('click', closeModal);
+            elements.expandedModal.addEventListener('click', (e) => {
+                if (e.target === elements.expandedModal) closeModal();
+            });
+
+            // Drag and drop
+            document.body.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                hideAllSections();
+                elements.dropZone.classList.add('active', 'drag-over');
+            });
+
+            elements.dropZone.addEventListener('dragleave', () => {
+                elements.dropZone.classList.remove('drag-over');
+            });
+
+            elements.dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                elements.dropZone.classList.remove('drag-over');
+                hideAllSections();
+                if (e.dataTransfer.files[0]) handleFileUpload(e.dataTransfer.files[0]);
+            });
+
+            // Keyboard
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    hideAllSections();
+                    closeModal();
+                }
+            });
+        }
+
+        // ===== INIT =====
+        function init() {
+            initTheme();
+            setupEventListeners();
+            updateDataStatus();
+        }
+
+        init();
     </script>
 </body>
 </html>
